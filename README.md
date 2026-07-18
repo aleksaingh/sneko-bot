@@ -8,7 +8,7 @@ An all-in-one Slack bot that tells you mostly some fun facts!
 
 | Command | Description |
 |---------|-------------|
-| /as-myping | Check the bot's latency |
+| /as-ping | Check the bot's latency |
 | /as-dadjoke | Get a random dad joke |
 | /as-catfact | Get a random cat fact |
 | /as-dog | Get a random dog picture |
