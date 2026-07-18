@@ -1,5 +1,4 @@
 require("dotenv").config();
-
 const { App } = require("@slack/bolt");
 const axios = require("axios");
 
@@ -16,10 +15,6 @@ app.command("/as-ping", async ({ command, ack, respond }) => {
   await respond({ text: `Pong!\nLatency: ${latency}ms` });
 });
 
-(async () => {
-  await app.start();
-  console.log("bot is running!");
-})();
 app.command("/as-help", async ({ ack, respond }) => {
   await ack();
   await respond({
@@ -29,12 +24,13 @@ app.command("/as-help", async ({ ack, respond }) => {
 /as-catfact - Get a cat fact
 /as-weather - Gets weather of a city you name
 /as-fact - Random fact
-/as-dadjoke - Get a random dad joke`
+/as-dadjoke - Get a random dad joke
+/as-dog - Get a random dog picture`
   });
 });
+
 app.command("/as-catfact", async ({ ack, respond }) => {
   await ack();
-
   try {
     const response = await axios.get("https://catfact.ninja/fact");
     await respond({ text: `Cat Fact:\n${response.data.fact}` });
@@ -42,6 +38,7 @@ app.command("/as-catfact", async ({ ack, respond }) => {
     await respond({ text: "Failed to fetch a cat fact." });
   }
 });
+
 app.command("/as-weather", async ({ ack, respond, command }) => {
   await ack();
   try {
@@ -62,14 +59,39 @@ app.command("/as-fact", async ({ ack, respond, command }) => {
     await respond({ text: "Failed to fetch a fact." });
   }
 });
+
 app.command("/as-dadjoke", async ({ ack, respond }) => {
   await ack();
   try {
     const response = await axios.get("https://icanhazdadjoke.com/", {
       headers: { Accept: "application/json" }
     });
-    await respond({ text: ` ${response.data.joke}` });
+    await respond({ text: `${response.data.joke}` });
   } catch (err) {
     await respond({ text: "Failed to fetch a dad joke." });
   }
 });
+
+app.command("/as-dog", async ({ ack, respond }) => {
+  await ack();
+  try {
+    const response = await axios.get("https://dog.ceo/api/breeds/image/random");
+    await respond({
+      blocks: [
+        {
+          type: "image",
+          image_url: response.data.message,
+          alt_text: "A random dog"
+        }
+      ],
+      text: "Here's a random dog!"
+    });
+  } catch (err) {
+    await respond({ text: "Failed to fetch a dog picture." });
+  }
+});
+
+(async () => {
+  await app.start();
+  console.log("bot is running!");
+})();
